@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
-    <classEntry path="com.stander.MainView"/>
+    <classEntry path="com.stander.piaudio.View"/>
+    <classEntry path="com.stander.piaudio.Controller"/>
+    <classEntry path="com.stander.piaudio.Model"/>
+    <classEntry path="com.stander.piaudio.renderers.ArtistRenderer"/>
+    <classEntry path="com.stander.piaudio.events.ArtistEvent"/>
+    <classEntry path="com.stander.piaudio.renderers.AlbumRenderer"/>
+    <classEntry path="com.stander.piaudio.events.AlbumEvent"/>
+    <classEntry path="com.stander.piaudio.renderers.SongRenderer"/>
+    <classEntry path="com.stander.piaudio.events.SongEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
