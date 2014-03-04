@@ -16,6 +16,7 @@
   </compiler>
   <applications>
     <application path="pi-audio-client-lib.as"/>
+    <application path="AudioClient.mxml"/>
   </applications>
   <modules/>
   <workers/>
