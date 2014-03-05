@@ -9,7 +9,6 @@
     <classEntry path="com.stander.piaudio.renderers.AlbumRenderer"/>
     <classEntry path="com.stander.piaudio.events.AlbumEvent"/>
     <classEntry path="com.stander.piaudio.renderers.SongRenderer"/>
-    <classEntry path="com.stander.piaudio.events.SongEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

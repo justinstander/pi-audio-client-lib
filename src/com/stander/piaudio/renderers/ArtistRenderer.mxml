@@ -16,35 +16,11 @@ mName = "Cage The Elephant"<br>
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				autoDrawBackground="true"
-				cacheAsBitmap="true"
-				click="clickHandler(event)">
-	<fx:Metadata>
-		/**
-		 * Dispatched when this class instance is clicked or touched 
-		 */
-		[Event(name="artistSelect",type="com.stander.piaudio.events.ArtistEvent")]
-	</fx:Metadata>
-	
-	<fx:Script>
-		<![CDATA[
-			import com.stander.piaudio.events.ArtistEvent;
-			
-			/**
-			 * Dispatches new album select event when the renderer is
-			 * clicked
-			 */
-			protected function clickHandler(event:MouseEvent):void
-			{
-				dispatchEvent(new ArtistEvent(ArtistEvent.ARTIST_SELECT,data));
-			}
-			
-		]]>
-	</fx:Script>
+				cacheAsBitmap="true">
 	
 	<!---
 	Artist Name Label
 	-->
-	<s:Label text="{data.mName}"
-			 fontSize="24" />
+	<s:Label text="{data.mName}" />
 	
 </s:ItemRenderer>

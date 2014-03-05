@@ -17,17 +17,27 @@ package com.stander.piaudio
 		/**
 		 * Constant for the <code>artists</code> view state
 		 */
-		public static const ARTISTS:String = "artists";
+		public static const STATE_ARTISTS:String = "artists";
 		
 		/**
 		 * Constant for the <code>albums</code> view state
 		 */
-		public static const ALBUMS:String = "albums";
+		public static const STATE_ALBUMS:String = "albums";
 		
 		/**
 		 * Constant for the <code>songs</code> view state
 		 */
-		public static const SONGS:String = "songs";
+		public static const STATE_SONGS:String = "songs";
+		
+		/**
+		 * Play button label for Play 
+		 */
+		public static const LABEL_PLAY:String = "Play";
+		
+		/**
+		 * Play button label for Pause
+		 */
+		public static const LABEL_PAUSE:String = "Pause";
 		
 		/**
 		 * Singleton instance 
@@ -50,7 +60,7 @@ package com.stander.piaudio
 		 * Internal
 		 * @see #viewState 
 		 */
-		private var _viewState:String = ARTISTS;
+		private var _viewState:String = STATE_ARTISTS;
 		
 		/**
 		 * Internal
@@ -63,7 +73,37 @@ package com.stander.piaudio
 		 * @see #currentAlbum 
 		 */
 		private var _currentAlbum:ArrayList;
-
+		
+		/**
+		 * Internal
+		 * @see #playEnabled 
+		 */
+		private var _playEnabled:Boolean;
+		
+		/**
+		 * Internal
+		 * @see #playLabel 
+		 */
+		private var _playLabel:String = LABEL_PLAY;
+		
+		/**
+		 * Internal
+		 * @see #stopEnabled 
+		 */
+		private var _stopEnabled:Boolean;
+		
+		/**
+		 * Internal
+		 * @see #playlist 
+		 */
+		private var _playlist:Vector.<Object>;
+		
+		/**
+		 * Internal
+		 * @see #playlistIndex
+		 */
+		private var _playlistIndex:int = -1;
+		
 		/**
 		 * Constructor. Hidden through singleton enforcer.
 		 * 
@@ -174,6 +214,120 @@ package com.stander.piaudio
 			}
 		}
 
+		[Bindable(event="playEnabledChange")]
+		/**
+		 * Playback enabled/available flag
+		 */
+		public function get playEnabled():Boolean
+		{
+			return _playEnabled;
+		}
+		public function set playEnabled(value:Boolean):void
+		{
+			if( _playEnabled !== value)
+			{
+				_playEnabled = value;
+				dispatchEvent(new Event("playEnabledChange"));
+			}
+		}
+
+		[Bindable(event="playlistChange")]
+		/**
+		 * Current playlist used for playback
+		 */
+		public function get playlist():Vector.<Object>
+		{
+			return _playlist;
+		}
+		public function set playlist(value:Vector.<Object>):void
+		{
+			if( _playlist !== value)
+			{
+				_playlist = value;
+				dispatchEvent(new Event("playlistChange"));
+				dispatchEvent(new Event("hasNextChange"));
+				dispatchEvent(new Event("hasPreviousChange"));
+			}
+		}
+
+		[Bindable(event="stopEnabledChange")]
+		/**
+		 * Stop enabled flag 
+		 */
+		public function get stopEnabled():Boolean
+		{
+			return _stopEnabled;
+		}
+		public function set stopEnabled(value:Boolean):void
+		{
+			if( _stopEnabled !== value)
+			{
+				_stopEnabled = value;
+				dispatchEvent(new Event("stopEnabledChange"));
+			}
+		}
+
+		[Bindable(event="playlistIndexChange")]
+		/**
+		 * Current Index of the current play list, if one exists 
+		 */
+		public function get playlistIndex():int
+		{
+			return _playlistIndex;
+		}
+		public function set playlistIndex(value:int):void
+		{
+			if( _playlistIndex !== value)
+			{
+				_playlistIndex = value;
+				dispatchEvent(new Event("playlistIndexChange"));
+				dispatchEvent(new Event("hasNextChange"));
+				dispatchEvent(new Event("hasPreviousChange"));
+			}
+		}
+
+		[Bindable(event="playLabelChange")]
+		/**
+		 * Label for the play button 
+		 */
+		public function get playLabel():String
+		{
+			return _playLabel;
+		}
+		public function set playLabel(value:String):void
+		{
+			if( _playLabel !== value)
+			{
+				_playLabel = value;
+				dispatchEvent(new Event("playLabelChange"));
+			}
+		}
+
+		[Bindable(event="hasNextChange")]
+		/**
+		 * Flag indicating if current playlist selection has a next item
+		 */
+		public function get hasNext():Boolean
+		{
+			if( _playlist == null )
+			{
+				return false;
+			}
+			return _playlistIndex != -1 && _playlistIndex < _playlist.length-1;
+		}
+
+		[Bindable(event="hasPreviousChange")]
+		/**
+		 * Flag indicating if current playlist selection has a previous item
+		 */
+		public function get hasPrevious():Boolean
+		{
+			if( _playlist == null )
+			{
+				return false;
+			}
+			return _playlistIndex > 0;
+		}
 	}
 }
 

@@ -7,14 +7,22 @@ Main Application View
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 layout="{viewLayout}"
 		 addedToStage="Controller.getInstance().init(stage)"
 		 currentState="{Model.getInstance().viewState}">
 	
 	<fx:Declarations>
 		<!---
-		Artist Layout
+		Master layout
 		-->
-		<s:VerticalLayout id="artistLayout"/>
+		<s:VerticalLayout id="viewLayout"
+						  gap="0" />
+		
+		<!---
+		Navigation layout
+		-->
+		<s:HorizontalLayout id="navigationLayout"
+							gap="0" />
 	</fx:Declarations>
 	
 	<s:states>
@@ -26,42 +34,55 @@ Main Application View
 	<!---
 	Renders Artist Collection
 	-->
-	<s:Scroller includeIn="artists"
-				width="100%"
-				height="100%"
-				interactionMode="{Model.getInstance().interactionMode}">
-		<s:DataGroup width="100%"
-					 height="100%"
-					 layout="{artistLayout}"
-					 itemRenderer="com.stander.piaudio.renderers.ArtistRenderer"
-					 dataProvider="{Model.getInstance().files}" />
-	</s:Scroller>
+	<s:List includeIn="artists"
+			width="100%"
+			height="100%"
+			interactionMode="{Model.getInstance().interactionMode}"
+			itemRenderer="com.stander.piaudio.renderers.ArtistRenderer"
+			dataProvider="{Model.getInstance().files}"
+			change="Controller.getInstance().artistChange(event)"/>
 	
 	<!---
 	Renders an Artist's Albums
 	-->
-	<s:Scroller includeIn="albums"
-				width="100%"
-				height="100%"
-				interactionMode="{Model.getInstance().interactionMode}">
-		<s:DataGroup width="100%"
-					 height="100%"
-					 layout="{artistLayout}"
-					 itemRenderer="com.stander.piaudio.renderers.AlbumRenderer"
-					 dataProvider="{Model.getInstance().currentArtist}" />
-	</s:Scroller>
+	<s:List includeIn="albums"
+			width="100%"
+			height="100%"
+			interactionMode="{Model.getInstance().interactionMode}"
+			itemRenderer="com.stander.piaudio.renderers.AlbumRenderer"
+			dataProvider="{Model.getInstance().currentArtist}"
+			change="Controller.getInstance().albumChange(event)"/>
 	
 	<!---
 	Renders an Album's Songs (Music)
 	-->
-	<s:Scroller includeIn="songs"
-				width="100%"
-				height="100%"
-				interactionMode="{Model.getInstance().interactionMode}">
-		<s:DataGroup width="100%"
-					 height="100%"
-					 layout="{artistLayout}"
-					 itemRenderer="com.stander.piaudio.renderers.SongRenderer"
-					 dataProvider="{Model.getInstance().currentAlbum}" />
-	</s:Scroller>
+	<s:List includeIn="songs"
+			width="100%"
+			height="100%"
+			allowMultipleSelection="true"
+			interactionMode="{Model.getInstance().interactionMode}"
+			itemRenderer="com.stander.piaudio.renderers.SongRenderer"
+			dataProvider="{Model.getInstance().currentAlbum}"
+			change="Controller.getInstance().songChange(event)"/>
+	
+	<!---
+	Navigation
+	-->
+	<s:Group layout="{navigationLayout}">
+		<s:Button enabled.artists="false"
+				  label="Back"
+				  click="Controller.getInstance().back()"/>
+		<s:Button label="{Model.getInstance().playLabel}"
+				  enabled="{Model.getInstance().playEnabled}"
+				  click="Controller.getInstance().play()"/>
+		<s:Button label="Stop"
+				  enabled="{Model.getInstance().stopEnabled}"
+				  click="Controller.getInstance().stop()"/>
+		<s:Button label="Previous"
+				  enabled="{Model.getInstance().hasPrevious}"
+				  click="Controller.getInstance().previous()"/>
+		<s:Button label="Next"
+				  enabled="{Model.getInstance().hasNext}"
+				  click="Controller.getInstance().next()"/>
+	</s:Group>
 </s:Group>
