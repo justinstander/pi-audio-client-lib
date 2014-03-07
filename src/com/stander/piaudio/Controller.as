@@ -4,6 +4,7 @@ package com.stander.piaudio
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
+	import flash.events.KeyboardEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.net.URLRequest;
@@ -96,6 +97,8 @@ package com.stander.piaudio
 		 */
 		public function init(stage:Stage):void
 		{
+			stage.addEventListener(KeyboardEvent.KEY_DOWN,stage_keyDownHandler);
+			
 			if( Multitouch.supportsTouchEvents )
 			{
 				Model.getInstance().interactionMode = InteractionMode.TOUCH;
@@ -422,6 +425,26 @@ package com.stander.piaudio
 				stop();
 			}
 			
+		}
+		
+		private function stage_keyDownHandler(event:KeyboardEvent):void
+		{
+			trace("Key Down: " + event.keyCode);
+			switch(event.keyCode)
+			{
+				case 178:
+					stop();
+					break;
+				case 177:
+					previous();
+					break;
+				case 176:
+					next();
+					break;
+				case 179:
+					play();
+					break;
+			}
 		}
 	}
 }

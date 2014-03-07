@@ -55,11 +55,17 @@ Main Application View
 	
 	<!---
 	Renders an Album's Songs (Music)
+	<p>
+	Allow drag and drop moving until sorting is done server side
+	</p>
 	-->
 	<s:List includeIn="songs"
 			width="100%"
 			height="100%"
 			allowMultipleSelection="true"
+			dragEnabled="true"
+			dropEnabled="true"
+			dragMoveEnabled="true"
 			interactionMode="{Model.getInstance().interactionMode}"
 			itemRenderer="com.stander.piaudio.renderers.SongRenderer"
 			dataProvider="{Model.getInstance().currentAlbum}"
