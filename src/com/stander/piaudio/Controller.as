@@ -349,6 +349,7 @@ package com.stander.piaudio
 		 */
 		private function playCurrentIndex():void
 		{
+			trace("play current index");
 			var model:Model = Model.getInstance();
 			var song:Object = model.playlist[model.playlistIndex];
 			

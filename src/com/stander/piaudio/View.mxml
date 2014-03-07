@@ -9,7 +9,8 @@ Main Application View
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 layout="{viewLayout}"
 		 addedToStage="Controller.getInstance().init(stage)"
-		 currentState="{Model.getInstance().viewState}">
+		 currentState="{Model.getInstance().viewState}"
+		 cacheAsBitmap="true">
 	
 	<fx:Declarations>
 		<!---
