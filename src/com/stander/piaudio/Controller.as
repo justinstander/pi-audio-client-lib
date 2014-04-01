@@ -45,6 +45,41 @@ package com.stander.piaudio
 		private static const URL_GET_FILE:String = "http://"+HOST+":8080/AudioGateway/Files?artist={0}&album={1}&song={2}"
 		
 		/**
+		 * Keyboard key code for play button
+		 */
+		private static const KEY_CODE_PLAY:uint = 179;
+		
+		/**
+		 * Keyboard key code for next button
+		 */
+		private static const KEY_CODE_NEXT:uint = 176;
+		
+		/**
+		 * Keyboard key code for previous button
+		 */
+		private static const KEY_CODE_PREVIOUS:uint = 177;
+		
+		/**
+		 * Keyboard key code for stop button 
+		 */
+		private static const KEY_CODE_STOP:uint = 178;
+		
+		/**
+		 * Token used to in URL string for artist Id
+		 */
+		private static const ARTIST_TOKEN:String = "{0}";
+		
+		/**
+		 * Token used to in URL string for album Id
+		 */
+		private static const ALBUM_TOKEN:String = "{1}";
+		
+		/**
+		 * Token used to in URL string for song Id
+		 */
+		private static const SONG_TOKEN:String = "{2}";
+			
+		/**
 		 * Singleton instance 
 		 */
 		private static var instance:Controller;
@@ -149,6 +184,11 @@ package com.stander.piaudio
 				model.currentAlbum = new ArrayList(album.mMusic);
 				list.selectedIndex = -1;
 			}
+			if( audio == null )
+			{
+				mapAlbumToPlaylist();
+				updateCurrentItem(0);
+			}
 		}
 		
 		/**
@@ -160,19 +200,21 @@ package com.stander.piaudio
 		public function songChange(event:IndexChangeEvent):void
 		{
 			trace("Song Selection Change");
-			if( audio != null )
+			var list:List = List(event.target);
+			var model:Model = Model.getInstance();
+			var currentSong:Object = model.playlist[model.playlistIndex];
+			var selectedSong:Object = list.selectedItem;
+			
+			if( selectedSong.mArtistId != currentSong.mArtistId ||
+				((selectedSong.mArtistId == currentSong.mArtistId) && (selectedSong.mAlbumId != currentSong.mAlbumId)) )
 			{
-				return;
+				trace("* Different Artist or Different Album");
+				trace("Current: " + currentSong.mArtistId + " " + currentSong.mAlbumId);
+				trace("Selected: " + selectedSong.mArtistId + " " + selectedSong.mAlbumId);
+				mapAlbumToPlaylist();
 			}
 			
-			var list:List = List(event.target);
-			var songs:Vector.<Object> = list.selectedItems;
-			if( songs.length > 0 )
-			{
-				var model:Model = Model.getInstance();
-				model.playEnabled = true;
-				model.playlist = songs;
-			}
+			jumpToIndex(list.selectedIndex);
 		}
 		
 		/**
@@ -218,7 +260,6 @@ package com.stander.piaudio
 			}
 			else
 			{
-				model.playlistIndex = 0;
 				model.stopEnabled = true;
 				model.playLabel = Model.LABEL_PAUSE;
 				
@@ -239,10 +280,11 @@ package com.stander.piaudio
 			
 			var model:Model = Model.getInstance();
 			model.stopEnabled = false;
-			model.playlistIndex = -1;
 			model.playLabel = Model.LABEL_PLAY;
 			
 			destroyExistingAudio();
+			
+			updateCurrentItem(0);
 		}
 		
 		/**
@@ -255,8 +297,7 @@ package com.stander.piaudio
 			var model:Model = Model.getInstance();
 			if(model.playlistIndex > 0)
 			{
-				model.playlistIndex--;
-				playCurrentIndex();
+				jumpToIndex(model.playlistIndex-1);
 			}
 		}
 		
@@ -270,8 +311,7 @@ package com.stander.piaudio
 			var model:Model = Model.getInstance();
 			if(model.playlistIndex < model.playlist.length-1)
 			{
-				model.playlistIndex++;
-				playCurrentIndex();
+				jumpToIndex(model.playlistIndex+1);
 			}
 		}
 		
@@ -285,7 +325,6 @@ package com.stander.piaudio
 			destroyAudio();
 			destroyChannel();
 			pausePosition = NaN;
-			
 		}
 		
 		/**
@@ -347,23 +386,64 @@ package com.stander.piaudio
 		 * 
 		 * 
 		 */
+		private function mapAlbumToPlaylist():void
+		{
+			var model:Model = Model.getInstance();
+			var count:uint = model.currentAlbum.length;
+			var playlist:Vector.<Object> = new Vector.<Object>();
+			for( var i:uint=0;i<count;i++ )
+			{
+				playlist[i] = model.currentAlbum.getItemAt(i);
+			}
+			model.playlist = playlist;
+			model.playEnabled = true;
+		}
+		
+		/**
+		 * 
+		 * @param index
+		 * 
+		 */
+		private function jumpToIndex(index:uint):void
+		{
+			updateCurrentItem(index);
+			if( audio != null )
+			{
+				playCurrentIndex();
+			}
+		}
+		
+		/**
+		 * 
+		 * 
+		 */
+		private function updateCurrentItem(index:uint):void
+		{
+			var model:Model = Model.getInstance();
+			model.playlistIndex = index;
+			model.playlistItem = model.playlist[index];
+		}
+		
+		/**
+		 * 
+		 * 
+		 */
 		private function playCurrentIndex():void
 		{
 			trace("play current index");
 			var model:Model = Model.getInstance();
-			var song:Object = model.playlist[model.playlistIndex];
 			
 			destroyExistingAudio();
 			
 			audio = new Sound();
 			addAudioListeners();
 			
-			trace("Play ArtistId: "+song.mArtistId+" AlbumId: "+song.mAlbumId+" SongId: "+song.mId);
+			trace("Play ArtistId: "+model.playlistItem.mArtistId+" AlbumId: "+model.playlistItem.mAlbumId+" SongId: "+model.playlistItem.mId);
 			
 			var url:String = URL_GET_FILE
-				.replace("{0}",song.mArtistId)
-				.replace("{1}",song.mAlbumId)
-				.replace("{2}",song.mId);
+				.replace(ARTIST_TOKEN,model.playlistItem.mArtistId)
+				.replace(ALBUM_TOKEN,model.playlistItem.mAlbumId)
+				.replace(SONG_TOKEN,model.playlistItem.mId);
 			var request:URLRequest = new URLRequest(url);
 			
 			audio.load(request);
@@ -428,22 +508,29 @@ package com.stander.piaudio
 			
 		}
 		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
 		private function stage_keyDownHandler(event:KeyboardEvent):void
 		{
-			trace("Key Down: " + event.keyCode);
 			switch(event.keyCode)
 			{
-				case 178:
+				case KEY_CODE_STOP:
 					stop();
 					break;
-				case 177:
+				case KEY_CODE_PREVIOUS:
 					previous();
 					break;
-				case 176:
+				case KEY_CODE_NEXT:
 					next();
 					break;
-				case 179:
+				case KEY_CODE_PLAY:
 					play();
+					break;
+				default:
+//					trace("Key Down: " + event.keyCode);
 					break;
 			}
 		}

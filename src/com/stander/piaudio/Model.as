@@ -105,6 +105,12 @@ package com.stander.piaudio
 		private var _playlistIndex:int = -1;
 		
 		/**
+		 * Internal
+		 * @see #playlistItem 
+		 */
+		private var _playlistItem:Object;
+		
+		/**
 		 * Constructor. Hidden through singleton enforcer.
 		 * 
 		 * @see SingletonEnforcer
@@ -211,6 +217,7 @@ package com.stander.piaudio
 			{
 				_currentAlbum = value;
 				dispatchEvent(new Event("currentAlbumChange"));
+				dispatchEvent(new Event("playlistItemChange"));
 			}
 		}
 
@@ -328,6 +335,24 @@ package com.stander.piaudio
 			}
 			return _playlistIndex > 0;
 		}
+
+		[Bindable(event="playlistItemChange")]
+		/**
+		 * Current playlist item (song)
+		 */
+		public function get playlistItem():Object
+		{
+			return _playlistItem;
+		}
+		public function set playlistItem(value:Object):void
+		{
+			if( _playlistItem !== value)
+			{
+				_playlistItem = value;
+				dispatchEvent(new Event("playlistItemChange"));
+			}
+		}
+
 	}
 }
 
