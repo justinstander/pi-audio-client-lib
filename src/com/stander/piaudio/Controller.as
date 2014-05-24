@@ -30,7 +30,7 @@ package com.stander.piaudio
 		/**
 		 * Host Address
 		 */
-		private static const HOST:String = "98.113.133.110"
+		private static const HOST:String = "98.116.242.159"
 //		private static const HOST:String = "localhost"
 		
 		/**
