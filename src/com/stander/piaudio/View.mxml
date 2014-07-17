@@ -26,8 +26,38 @@ Main Application View
 							gap="0" />
 	</fx:Declarations>
 	
+	<fx:Script>
+		<![CDATA[
+			private var _playIcon:Class;
+			
+			[Bindable(event="playButtonIconChange")]
+			public function set playIcon(value:Class):void
+			{
+				if( _playIcon !== value )
+				{
+					_playIcon = value;
+					invalidateProperties();
+					dispatchEvent(new Event("playButtonIconChange"));
+				}
+			}
+			public function get playIcon():Class
+			{
+				return _playIcon;
+			}
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				if( playButton != null )
+				{
+					playButton.setStyle("icon",playIcon);
+				}
+			}
+		]]>
+	</fx:Script>
+	
 	<s:states>
-		<mx:State name="artists"/>
+		<mx:State name="artists" />
 		<mx:State name="albums" />
 		<mx:State name="songs" />
 	</s:states>
@@ -72,21 +102,27 @@ Main Application View
 	<!---
 	Navigation
 	-->
-	<s:Group layout="{navigationLayout}">
+	<s:Group layout="{navigationLayout}"
+			 width="100%">
 		<s:Button enabled.artists="false"
-				  label="Back"
-				  click="Controller.getInstance().back()"/>
-		<s:Button label="{Model.getInstance().playLabel}"
+				  icon="@Embed(source='../assets/backButton.png')"
+				  click="Controller.getInstance().back()"
+				  width="100%"/>
+		<s:Button id="playButton"
 				  enabled="{Model.getInstance().playEnabled}"
-				  click="Controller.getInstance().play()"/>
-		<s:Button label="Stop"
-				  enabled="{Model.getInstance().stopEnabled}"
-				  click="Controller.getInstance().stop()"/>
-		<s:Button label="Previous"
-				  enabled="{Model.getInstance().hasPrevious}"
-				  click="Controller.getInstance().previous()"/>
-		<s:Button label="Next"
-				  enabled="{Model.getInstance().hasNext}"
-				  click="Controller.getInstance().next()"/>
+				  click="Controller.getInstance().play()"
+				  width="100%"/>
+		<s:Button enabled="{Model.getInstance().stopEnabled}"
+				  icon="@Embed(source='../assets/stopButton.png')"
+				  click="Controller.getInstance().stop()"
+				  width="100%"/>
+		<s:Button enabled="{Model.getInstance().hasPrevious}"
+				  icon="@Embed(source='../assets/previousButton.png')"
+				  click="Controller.getInstance().previous()"
+				  width="100%"/>
+		<s:Button enabled="{Model.getInstance().hasNext}"
+				  icon="@Embed(source='../assets/forwardButton.png')"
+				  click="Controller.getInstance().next()"
+				  width="100%"/>
 	</s:Group>
 </s:Group>

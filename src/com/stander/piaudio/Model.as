@@ -29,15 +29,17 @@ package com.stander.piaudio
 		 */
 		public static const STATE_SONGS:String = "songs";
 		
+		[Embed(source="../assets/playButton.png")]
 		/**
 		 * Play button label for Play 
 		 */
-		public static const LABEL_PLAY:String = "Play";
+		public static const ICON_PLAY:Class;
 		
+		[Embed(source="../assets/pauseButton.png")]
 		/**
 		 * Play button label for Pause
 		 */
-		public static const LABEL_PAUSE:String = "Pause";
+		public static const ICON_PAUSE:Class;
 		
 		/**
 		 * Singleton instance 
@@ -84,7 +86,7 @@ package com.stander.piaudio
 		 * Internal
 		 * @see #playLabel 
 		 */
-		private var _playLabel:String = LABEL_PLAY;
+		private var _playIcon:Class = ICON_PLAY;
 		
 		/**
 		 * Internal
@@ -293,20 +295,20 @@ package com.stander.piaudio
 			}
 		}
 
-		[Bindable(event="playLabelChange")]
+		[Bindable(event="playIconChange")]
 		/**
 		 * Label for the play button 
 		 */
-		public function get playLabel():String
+		public function get playIcon():Class
 		{
-			return _playLabel;
+			return _playIcon;
 		}
-		public function set playLabel(value:String):void
+		public function set playIcon(value:Class):void
 		{
-			if( _playLabel !== value)
+			if( _playIcon !== value)
 			{
-				_playLabel = value;
-				dispatchEvent(new Event("playLabelChange"));
+				_playIcon = value;
+				dispatchEvent(new Event("playIconChange"));
 			}
 		}
 

@@ -248,20 +248,20 @@ package com.stander.piaudio
 				{
 					pausePosition = channel.position;
 					destroyChannel();
-					model.playLabel = Model.LABEL_PLAY;
+					model.playIcon = Model.ICON_PLAY;
 				}
 				else
 				{
 					channel = audio.play(pausePosition);
 					addChannelListeners();
 					pausePosition = NaN;
-					model.playLabel = Model.LABEL_PAUSE;
+					model.playIcon = Model.ICON_PAUSE;
 				}
 			}
 			else
 			{
 				model.stopEnabled = true;
-				model.playLabel = Model.LABEL_PAUSE;
+				model.playIcon = Model.ICON_PAUSE;
 				
 				playCurrentIndex();
 			}
@@ -280,7 +280,7 @@ package com.stander.piaudio
 			
 			var model:Model = Model.getInstance();
 			model.stopEnabled = false;
-			model.playLabel = Model.LABEL_PLAY;
+			model.playIcon = Model.ICON_PLAY;
 			
 			destroyExistingAudio();
 			
@@ -451,7 +451,7 @@ package com.stander.piaudio
 			channel = audio.play();
 			addChannelListeners();
 			
-			model.playLabel = Model.LABEL_PAUSE;
+			model.playIcon = Model.ICON_PAUSE;
 		}
 		
 		/**
